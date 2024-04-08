@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'primeicons/primeicons.css';
 import { PrimeReactProvider } from 'primereact/api'; //PrimeReactContext Removed because not used
 import "primereact/resources/themes/lara-dark-indigo/theme.css";
 //import "primereact/resources/themes/saga-purple/theme.css";

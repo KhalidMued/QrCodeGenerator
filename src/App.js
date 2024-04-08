@@ -9,6 +9,7 @@ import { Image } from 'primereact/image';
 
 
 
+
 function App() {
   //User Input
   //Generat Code
@@ -16,14 +17,23 @@ function App() {
 
   const [query , setQuery] = useState('');
   const [qrUrl , setQrUrl] = useState('');
-
+ 
 
   const generateQrCode = async () => {
     try{
       const dataUrl = await QRCode.toDataURL(query)
       setQrUrl(dataUrl) //QrCode is saved in the State Varible, after its generated
 
-    } catch(e){
+      const sanitizedPhoneNumber = query.replace(/\D/g, ''); //Enabling phone number
+
+      if (!sanitizedPhoneNumber) {
+        throw new Error('Invalid phone number format.');
+      }
+    
+    } 
+    
+    
+    catch(e){
       console.log(e);
       
     }
@@ -51,13 +61,20 @@ function App() {
       alert('Failed To Downlaod ... Sorry!')
     }
   }
+
   return (
     <div className="App">
-    <h1 style={{ marginTop: '10vh '}}> Qr Code Generator </h1>
-    <InputTextarea autoResize placeholder='Type Here' value={query} onChange={(e) =>
-       setQuery(e.target.value)} rows={5} cols={30} />
-       <br/><br/>
-       <Button label="Generate QR Code" icon="pi pi-check" iconPos="right" onClick={generateQrCode} />
+
+      <h1 style={{ marginTop: '10vh '}}> Qr Code Generator </h1>
+
+      <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Hey! You can enter your phone number, url, or any text to generate a QrCode For it </p>
+
+      <InputTextarea autoResize placeholder='Type Here' value={query} onChange={(e) => setQuery(e.target.value)} rows={5} cols={30} />
+
+      <br/><br/>
+
+      <Button label="Generate QR Code" icon="pi pi-check" iconPos="right" onClick={generateQrCode} />
+
        <br/>
 
       {
