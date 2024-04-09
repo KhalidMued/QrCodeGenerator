@@ -5,6 +5,8 @@ import { Button } from 'primereact/button';
 import { useState } from 'react';
 import  QRCode  from 'qrcode';
 import { Image } from 'primereact/image';
+import { Message } from 'primereact/message';
+
 
 
 
@@ -17,9 +19,18 @@ function App() {
 
   const [query , setQuery] = useState('');
   const [qrUrl , setQrUrl] = useState('');
+  const [showError, setShowError] = useState(false);
+  
  
 
   const generateQrCode = async () => {
+
+    if (query.trim() === '') { //If empty display the warning message
+      setShowError(true);
+      return;
+    }
+    setShowError(false);
+
     try{
       const dataUrl = await QRCode.toDataURL(query)
       setQrUrl(dataUrl) //QrCode is saved in the State Varible, after its generated
@@ -64,6 +75,8 @@ function App() {
 
   return (
     <div className="App">
+
+      {showError && <Message severity="warn" text="Enter a valid Message" style={{ position: 'fixed', top: '10px', right: '10px', zIndex: '9999' }} />}
 
       <h1 style={{ marginTop: '10vh '}}> Qr Code Generator </h1>
 
