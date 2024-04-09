@@ -13,17 +13,21 @@ import { Message } from 'primereact/message';
 
 
 function App() {
-  //User Input
-  //Generat Code
-  //Download QrCode
+
+      //User Input
+      //Generat Code
+      //Download QrCode
 
   const [query , setQuery] = useState('');
   const [qrUrl , setQrUrl] = useState('');
   const [showError, setShowError] = useState(false);
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
   
  
 
-  const generateQrCode = async () => {
+  const generateQrCodeFromText = async () => {
 
     if (query.trim() === '') { //If empty display the warning message
       setShowError(true);
@@ -32,23 +36,35 @@ function App() {
     setShowError(false);
 
     try{
-      const dataUrl = await QRCode.toDataURL(query)
-      setQrUrl(dataUrl) //QrCode is saved in the State Varible, after its generated
-
-      const sanitizedPhoneNumber = query.replace(/\D/g, ''); //Enabling phone number
-
-      if (!sanitizedPhoneNumber) {
-        throw new Error('Invalid phone number format.');
-      }
-    
-    } 
-    
-    
-    catch(e){
+      const dataUrl = await QRCode.toDataURL(query);
+      setQrUrl(dataUrl); //QrCode is saved in the State Varible, after its generated
+    } catch(e){
       console.log(e);
       
     }
-  } 
+  };
+  
+  
+  const generateQrCodeFromContactInfo = async () => {
+    if (name.trim() === '' || phone.trim() === '' || address.trim() === '') {
+      setShowError(true);
+      return;
+    }
+    setShowError(false);
+  
+    try {
+      //Format the contact information as a vCard
+      const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nADR:${address}\nEND:VCARD`;
+      
+      //Generate QR code from the vCard
+      const dataUrl = await QRCode.toDataURL(vCardData);
+      setQrUrl(dataUrl);
+    } catch (error) {
+      console.error('Error generating QR code from contact info:', error);
+    }
+  };
+  
+  
 
   const downloadQrCode = () => {
     try{
@@ -71,7 +87,7 @@ function App() {
     }catch(e){
       alert('Failed To Downlaod ... Sorry!')
     }
-  }
+  };
 
   return (
     <div className="App">
@@ -80,32 +96,48 @@ function App() {
 
       <h1 style={{ marginTop: '10vh '}}> Qr Code Generator </h1>
 
-      <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Hey! You can enter your phone number, url, or any text to generate a QrCode For it </p>
+      <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Hey! You can enter your url, or any text to generate a QrCode For it </p>
 
       <InputTextarea autoResize placeholder='Type Here' value={query} onChange={(e) => setQuery(e.target.value)} rows={5} cols={30} />
 
       <br/><br/>
 
-      <Button label="Generate QR Code" icon="pi pi-check" iconPos="right" onClick={generateQrCode} />
+      <Button label="Generate QR Code" icon="pi pi-check" iconPos="right" onClick={generateQrCodeFromText} />
 
-       <br/>
+       <br/><br/>
 
-      {
-        qrUrl.length ? ( //To Print the Generated QrCode
-          <>
+       <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Here , You can enter your Contact Information to generate a QrCode For it </p>
+
+      <div style={{ marginTop: '20px' }}>
+        <InputTextarea autoResize placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <InputTextarea autoResize placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ marginLeft: '10px' }} />
+        <InputTextarea autoResize placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginLeft: '10px' }} />
+      </div>
+
+      <Button label="Generate QR Code from Contact Info" icon="pi pi-check" iconPos="right" onClick={generateQrCodeFromContactInfo} style={{ marginTop: '10px' }} />
+
+      <div>
+        {
+          qrUrl.length ? ( //To Print the Generated QrCode
+            <>
+              
+              <Image src={qrUrl} alt="qrcode" style={{ minWidth:'20vw', width: 'fit-content', margin: '10vh auto'}} width='300' preview /> 
             
-            <Image src={qrUrl} alt="qrcode" style={{ minWidth:'20vw', width: 'fit-content', margin: '10vh auto'}} width='300' preview /> 
-          
-            <br/>
+              <br/>
 
-            <Button label="Download" icon="pi pi-check" iconPos="right" onClick={downloadQrCode} />
+              <Button label="Download" icon="pi pi-check" iconPos="right" onClick={downloadQrCode} />
 
-          
-          </>
-        ) : ''
-      }
+            
+            </>
+          ) : ''
+        }
+      </div>
+
     </div>
   );
 }
 
 export default App;
+
+
+
