@@ -109,9 +109,9 @@ function App() {
        <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Here , You can enter your Contact Information to generate a QrCode For it </p>
 
       <div style={{ marginTop: '20px' }}>
-        <InputTextarea autoResize placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <InputTextarea autoResize placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ marginLeft: '10px' }} />
-        <InputTextarea autoResize placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginLeft: '10px' }} />
+        <InputTextarea autoResize placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={{ marginBottom: '5px', marginLeft: '12px' }}/>
+        <InputTextarea autoResize placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ marginBottom: '5px', marginLeft: '10px' }} />
+        <InputTextarea autoResize placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginBottom: '5px',  marginLeft: '10px' }} />
       </div>
 
       <Button label="Generate QR Code from Contact Info" icon="pi pi-check" iconPos="right" onClick={generateQrCodeFromContactInfo} style={{ marginTop: '10px' }} />
