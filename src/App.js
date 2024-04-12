@@ -46,7 +46,7 @@ function App() {
   
   
   const generateQrCodeFromContactInfo = async () => {
-    if (name.trim() === '' || phone.trim() === '' || address.trim() === '') {
+    if (name.trim() === '' || phone.trim() === '') {
       setShowError(true);
       return;
     }
@@ -54,8 +54,12 @@ function App() {
   
     try {
       //Format the contact information as a vCard
-      const vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nADR:${address}\nEND:VCARD`;
-      
+      let vCardData = `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL:${phone}\nADR:${address}\nEND:VCARD`;
+      //Making the address field optional
+      if (address.trim() !== '') {
+        vCardData += `ADR:${address}\n`;
+      }
+      vCardData += `END:VCARD`;
       //Generate QR code from the vCard
       const dataUrl = await QRCode.toDataURL(vCardData);
       setQrUrl(dataUrl);
@@ -109,9 +113,9 @@ function App() {
        <p style={{ fontSize: '20px', color: '#D0C0EC', fontFamily: 'Monospace'}}> Here , You can enter your Contact Information to generate a QrCode For it </p>
 
       <div style={{ marginTop: '20px' }}>
-        <InputTextarea autoResize placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={{ marginBottom: '5px', marginLeft: '12px' }}/>
+        <InputTextarea autoResize placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} style={{ marginBottom: '5px', marginLeft: '10px' }}/>
         <InputTextarea autoResize placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ marginBottom: '5px', marginLeft: '10px' }} />
-        <InputTextarea autoResize placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginBottom: '5px',  marginLeft: '10px' }} />
+        <InputTextarea autoResize placeholder="Address (Optional)" value={address} onChange={(e) => setAddress(e.target.value)} style={{ marginBottom: '5px',  marginLeft: '10px' }} />
       </div>
 
       <Button label="Generate QR Code from Contact Info" icon="pi pi-check" iconPos="right" onClick={generateQrCodeFromContactInfo} style={{ marginTop: '10px' }} />
