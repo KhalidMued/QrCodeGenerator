@@ -5,7 +5,7 @@
 
 ## Description
 
-This project is a simple QR code generator web application built with React. It allows users to generate QR codes from text input and download them as image files.
+This project is a simple QR code generator web application built with React. It allows users to generate QR codes from text input and download them as image files. As well as for their contact information.
 
 ## Usage
 
